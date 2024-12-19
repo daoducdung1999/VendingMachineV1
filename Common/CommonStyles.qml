@@ -23,9 +23,18 @@ QtObject {
     property color accentColor: "#FFC107"
     property color whiteColor: "#FFFFFF"
     property color grayColor: "#444444"
+    property color gray15: "#D9D9D9"
+    property color gray25: "#BFBFBF"
+    property color gray50: "#808080"
+    property color darkGray: "#1A1A1A"
 
     //product type
     property int proteinType: 1
     property int bcaaType: 2
     property int preWorkoutType: 3
+
+    //ingredientType
+    property int addProtein: 1
+    property int addNutrient: 2
+    property int addIce: 3
 }

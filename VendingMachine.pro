@@ -12,16 +12,11 @@ SOURCES += \
         action/actionprovider.cpp \
         appmanager.cpp \
         arch/messageabs/innermessage.cpp \
-        arch/processorabs/processorabstract.cpp \
-        arch/processorabs/processormanager.cpp \
-        arch/processorabs/workerthread.cpp \
         main.cpp \
-        middleware/vendingmachinemiddleware.cpp \
         model/ingredientitem.cpp \
         model/innerevent.cpp \
         model/productinformationitem.cpp \
         model/qobjectlistmodel.cpp \
-        processor/mainbusinessprocessor.cpp \
         store/mainwindowstore.cpp
 
 INCLUDEPATH += $$PWD/cereal
@@ -49,17 +44,12 @@ HEADERS += \
     arch/flux/middleware.h \
     arch/flux/store.h \
     arch/messageabs/innermessage.h \
-    arch/processorabs/processorabstract.h \
-    arch/processorabs/processormanager.h \
-    arch/processorabs/workerthread.h \
     commonsetting.h \
-    middleware/vendingmachinemiddleware.h \
     model/ingredientitem.h \
     model/innerevent.h \
     model/productinformationitem.h \
     model/qobjectlistmodel.h \
     model/qobjectlistmodelt.h \
-    processor/mainbusinessprocessor.h \
     store/mainwindowstore.h
 
 DISTFILES +=

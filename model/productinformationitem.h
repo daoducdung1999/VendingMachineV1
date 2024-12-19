@@ -19,6 +19,7 @@ class ProductInformationItem : public QObject
     Q_PROPERTY(IngredientModel* additionalProtein READ additionalProtein NOTIFY additionalProteinChanged FINAL)
     Q_PROPERTY(IngredientModel* additionalNutrients READ additionalNutrients NOTIFY additionalNutrientsChanged FINAL)
     Q_PROPERTY(bool isAddIce READ isAddIce WRITE setIsAddIce NOTIFY isAddIceChanged FINAL)
+    Q_PROPERTY(double iceCost READ iceCost WRITE setIceCost NOTIFY iceCostChanged FINAL)
 
 public:
     ProductInformationItem();
@@ -51,6 +52,9 @@ public:
     bool isAddIce() const;
     void setIsAddIce(bool newIsAddIce);
 
+    double iceCost() const;
+    void setIceCost(double newIceCost);
+
 signals:
     void idChanged();
     void typeChanged();
@@ -62,6 +66,7 @@ signals:
     void additionalProteinChanged();
     void additionalNutrientsChanged();
     void isAddIceChanged();
+    void iceCostChanged();
 
 private:
     int mId {0};
@@ -76,6 +81,7 @@ private:
     QSharedPointer<IngredientModel> mAdditionalNutrients {nullptr};
     //
     bool mIsAddIce {false};
+    double mIceCost {500};
 };
 inline bool operator==(const QSharedPointer<ProductInformationItem>& lhs, const QSharedPointer<ProductInformationItem>& rhs)
 {

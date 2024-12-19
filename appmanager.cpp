@@ -24,10 +24,6 @@ bool AppManager::initSystem()
 
 void AppManager::initNewObject()
 {
-    mVendingMachineMiddleware = QSharedPointer<VendingMachineMiddleware>(new VendingMachineMiddleware());
-    //
-    mMainBusinessProcessor = std::make_unique<MainBusinessProcessor>(MAIN_BUSINESS_PROCESSOR);
-    static_cast<MainBusinessProcessor*>(mMainBusinessProcessor.get())->setMiddleware(mVendingMachineMiddleware);
 }
 
 void AppManager::initQmlAccession()
@@ -53,7 +49,6 @@ void AppManager::initQmlAccession()
 
 void AppManager::initStoreAndMiddlewareRegistration()
 {
-    Dispatcher::instance().registerMiddleware(mVendingMachineMiddleware);
     //
     Dispatcher::instance().registerStore(QSharedPointer<Store>(MainWindowStore::getInstance(), [](Store*)
                                                                {}));
@@ -61,19 +56,10 @@ void AppManager::initStoreAndMiddlewareRegistration()
 
 void AppManager::initSignalSlotConnection()
 {
-    QObject::connect(mVendingMachineMiddleware.get(),
-                     &VendingMachineMiddleware::signalDispatchActionToProcessor,
-                     static_cast<MainBusinessProcessor*>(mMainBusinessProcessor.get()),
-                     &MainBusinessProcessor::slotReceiveActionFromMiddleware);
-    QObject::connect(static_cast<MainBusinessProcessor*>(mMainBusinessProcessor.get()),
-                     &MainBusinessProcessor::signalQuit,
-                     this,
-                     &AppManager::slotQuit);
 }
 
 void AppManager::initSystemBusiness()
 {
-    emit mMainBusinessProcessor->startProcess();
 }
 
 void AppManager::registerMetaType()
@@ -94,11 +80,6 @@ void AppManager::registerMetaType()
 
 void AppManager::slotQuit()
 {
-    if (mMainBusinessProcessor)
-    {
-        emit mMainBusinessProcessor->stopProcess();
-    }
-
     qApp->quit();
 }
 

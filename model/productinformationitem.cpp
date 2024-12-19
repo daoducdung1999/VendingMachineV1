@@ -135,3 +135,16 @@ void ProductInformationItem::setIsAddIce(bool newIsAddIce)
     mIsAddIce = newIsAddIce;
     emit isAddIceChanged();
 }
+
+double ProductInformationItem::iceCost() const
+{
+    return mIceCost;
+}
+
+void ProductInformationItem::setIceCost(double newIceCost)
+{
+    if (qFuzzyCompare(mIceCost, newIceCost))
+        return;
+    mIceCost = newIceCost;
+    emit iceCostChanged();
+}

@@ -5,6 +5,7 @@ import "../"
 
 Button {
     id: button
+    property string imgSource: ""
     implicitHeight: 78
     implicitWidth: 78
 
@@ -38,10 +39,11 @@ Button {
         text: buttonName
         font.family: CommonStyles.notoSanFontRegular
         font.weight: Font.Bold
-        font.pointSize: textSize
+        font.pixelSize: textSize
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         color: textColor
         font.bold: true
     }
+
 }

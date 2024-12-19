@@ -8,7 +8,6 @@ Item {
     property string name: ""
     property string quantity: ""
     property string cost: ""
-    property int totalAmount: 0
     property int total: 0
     signal btnSubClicked()
     signal btnAddClicked()
@@ -59,11 +58,12 @@ Item {
                 Image {
                     id: subBtn
                     anchors.fill: parent
-                    source: "qrc:/Image/Components/Steve-Zondicons-Minus-Solid.svg"
+                    source: "qrc:/Image/Components/minus.svg"
                     fillMode: Image.Stretch
                 }
                 MouseArea {
                     anchors.fill: parent
+                    enabled: parseInt(total) > 0
                     onClicked: {
                         btnSubClicked()
                     }
@@ -100,7 +100,7 @@ Item {
                 Image {
                     id: addBtn
                     anchors.fill: parent
-                    source: "qrc:/Image/Components/Steve-Zondicons-Add-Solid.svg"
+                    source: "qrc:/Image/Components/add.svg"
                     fillMode: Image.Stretch
                 }
                 MouseArea {

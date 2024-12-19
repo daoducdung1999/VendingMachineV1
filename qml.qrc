@@ -31,7 +31,12 @@
         <file>Image/SupAndDiet/sup_diet_05.png</file>
         <file>Image/SupAndDiet/sup_diet_06.png</file>
         <file>Image/SupAndDiet/sup_diet_07.png</file>
-        <file>Image/Components/Steve-Zondicons-Minus-Solid.svg</file>
-        <file>Image/Components/Steve-Zondicons-Add-Solid.svg</file>
+        <file>Image/Components/minus.svg</file>
+        <file>Image/Components/add.svg</file>
+        <file>Video/70796-538877060_tiny.avi</file>
+        <file>Common/Components/SelectedProductItem.qml</file>
+        <file>Image/Components/credit-card (1).png</file>
+        <file>Image/Components/leftarrow.svg</file>
+        <file>Image/Components/rightarrow.svg</file>
     </qresource>
 </RCC>

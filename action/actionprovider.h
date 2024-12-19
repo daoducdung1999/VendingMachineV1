@@ -23,6 +23,11 @@ public:
 
     //
     Q_INVOKABLE void selectProduct(QVariantMap data);
+    Q_INVOKABLE void confirmSelectProduct();
+    Q_INVOKABLE void cancelAllSelectedProduct();
+    //
+    Q_INVOKABLE void addIngredient(QVariantMap data);
+    Q_INVOKABLE void subIngredient(QVariantMap data);
 
 private:
     ActionProvider() = default;

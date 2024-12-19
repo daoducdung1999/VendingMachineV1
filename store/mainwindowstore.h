@@ -18,10 +18,14 @@ class MainWindowStore : public QObject, public Store
     Q_PROPERTY(ProductInformationModel* supAndDietProductInfoModel READ supAndDietProductInfoModel NOTIFY supAndDietProductInfoModelChanged FINAL)
     //
     Q_PROPERTY(ProductInformationItem* productInfoDetailItem READ proteinProductInfoDetailItem NOTIFY productInfoDetailItemChanged FINAL)
+    Q_PROPERTY(ProductInformationModel* selectedProductModel READ selectedProductModel NOTIFY selectedProductModelChanged FINAL)
+    Q_PROPERTY(double totalPayment READ getTotalPayment NOTIFY selectedProductModelChanged FINAL)
 
 public:
     ~MainWindowStore();
     static MainWindowStore* getInstance();
+
+    double getTotalPayment();
 
     void process(const QSharedPointer<Action>& action) Q_DECL_OVERRIDE;
 
@@ -40,6 +44,9 @@ public:
     ProductInformationModel* supAndDietProductInfoModel() const;
     void setSupAndDietProductInfoModel(QSharedPointer<ProductInformationModel> newSupAndDietProductInfoModel);
 
+    ProductInformationModel* selectedProductModel() const;
+    void setSelectedProductModel(QSharedPointer<ProductInformationModel> newSelectedProductModel);
+
 signals:
     void proteinProductInfoModelChanged();
     void bcaaProductInfoModelChanged();
@@ -47,6 +54,8 @@ signals:
     void supAndDietProductInfoModelChanged();
     //
     void productInfoDetailItemChanged();
+
+    void selectedProductModelChanged();
 
 private:
     /**
@@ -74,6 +83,18 @@ private:
      * @param action
      */
     void processActionSelectProduct(QSharedPointer<Action> action);
+
+    /**
+     * @brief processActionAddIngredient
+     * @param action
+     */
+    void processActionAddIngredient(QSharedPointer<Action> action);
+
+    /**
+     * @brief processActionSubIngredient
+     * @param action
+     */
+    void processActionSubIngredient(QSharedPointer<Action> action);
 
     /**
      * @brief processActionSelectProteinProduct
@@ -104,6 +125,7 @@ private:
     static MainWindowStore* instance;
     //item for display detail
     QSharedPointer<ProductInformationItem> mProductInfoDetailItem {nullptr};
+    QSharedPointer<ProductInformationModel> mSelectedProductModel {nullptr};
     //protein
     QSharedPointer<ProductInformationModel> mProteinProductInfoModel {nullptr};
     //bcaa

@@ -8,6 +8,7 @@ import Flux 1.0
 
 Rectangle {
     property string imgSource: ""
+    property int typeIngredient: CommonStyles.addProtein
     signal btnCancelClicked()
     signal btnConfirmClicked()
     anchors.fill: parent
@@ -21,6 +22,7 @@ Rectangle {
         btn3.setToMainColor()
         //
         listView.model = MainWindowStore.productInfoDetailItem.additionalProtein
+        typeIngredient: CommonStyles.addProtein
     }
 
     //image and ingredient
@@ -100,7 +102,10 @@ Rectangle {
             ButtonGroup.group: groupBtn
             buttonRadius: parent.width * 0.04
             onClicked: {
+                listView.visible = true
+                typeIngredient = CommonStyles.addProtein
                 listView.model = MainWindowStore.productInfoDetailItem.additionalProtein
+                addIceArea.visible = false
             }
         }
 
@@ -114,7 +119,10 @@ Rectangle {
             ButtonGroup.group: groupBtn
             buttonRadius: parent.width * 0.04
             onClicked: {
+                listView.visible = true
+                typeIngredient = CommonStyles.addNutrient
                 listView.model = MainWindowStore.productInfoDetailItem.additionalNutrients
+                addIceArea.visible = false
             }
         }
 
@@ -128,6 +136,61 @@ Rectangle {
             ButtonGroup.group: groupBtn
             buttonRadius: parent.width * 0.04
             onClicked: {
+                typeIngredient = CommonStyles.addIce
+                listView.model = []
+                addIceArea.visible = true
+                listView.visible = false
+            }
+        }
+    }
+
+    //add ice
+    Rectangle {
+        id: addIceArea
+        anchors.fill: parent
+        anchors.topMargin: parent.height * 0.33
+        anchors.bottomMargin: parent.height * 0.3
+        color: CommonStyles.transparentColor
+        visible: false
+
+        Rectangle {
+            anchors.top: parent.top
+            width: parent.width
+            height: parent.height / 4
+            color: CommonStyles.transparentColor
+            IngredientItem {
+                anchors.fill: parent
+                anchors.margins: parent.width * 0.01
+                name: "Add Ice"
+                cost: "₩ " + MainWindowStore.productInfoDetailItem.iceCost
+                total: MainWindowStore.productInfoDetailItem.isAddIce ? 1 : 0
+
+                onBtnSubClicked: {
+                    if (!MainWindowStore.productInfoDetailItem.isAddIce)
+                    {
+                        return
+                    }
+
+                    var data = {
+                        name: "",
+                        type: typeIngredient
+                    }
+
+                    ActionProvider.subIngredient(data)
+                }
+
+                onBtnAddClicked: {
+                    if (MainWindowStore.productInfoDetailItem.isAddIce)
+                    {
+                        return
+                    }
+
+                    var data = {
+                        name: "",
+                        type: typeIngredient
+                    }
+                    ActionProvider.addIngredient(data)
+                }
             }
         }
     }
@@ -155,14 +218,23 @@ Rectangle {
                 name: model.object.name
                 quantity: model.object.quantity + "g"
                 cost: "₩ " + model.object.cost
-                totalAmount: model.object.amount
+                total: model.object.amount
 
                 onBtnSubClicked: {
+                    var data = {
+                        name: model.object.name,
+                        type: typeIngredient
+                    }
 
+                    ActionProvider.subIngredient(data)
                 }
 
                 onBtnAddClicked: {
-
+                    var data = {
+                        name: model.object.name,
+                        type: typeIngredient
+                    }
+                    ActionProvider.addIngredient(data)
                 }
             }
         }
@@ -216,6 +288,7 @@ Rectangle {
             btnBorderColor: CommonStyles.primaryColor
             btnColor: CommonStyles.transparentColor
             textColor: CommonStyles.primaryColor
+            textSize: parent.height * 0.35
             onClicked: {
                 btnCancelClicked()
             }
@@ -228,8 +301,10 @@ Rectangle {
             Layout.fillWidth: true
             buttonName: "Select"
             buttonRadius: parent.width * 0.05
+            textSize: parent.height * 0.35
             onClicked: {
                 btnConfirmClicked()
+                ActionProvider.confirmSelectProduct()
             }
         }
     }

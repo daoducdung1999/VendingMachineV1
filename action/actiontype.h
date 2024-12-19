@@ -8,6 +8,11 @@ enum class ActionType
     TestAction,
     //
     SelectProduct,
+    ConfirmSelectProduct,
+    CancelAllSelectedProduct,
+    //
+    AddIngredient,
+    SubIngredient,
 };
 
 #endif // ACTIONTYPE_H

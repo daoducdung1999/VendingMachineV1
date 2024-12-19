@@ -5,9 +5,7 @@
 #include <QSharedPointer>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "middleware/vendingmachinemiddleware.h"
 #include "action/actionprovider.h"
-#include "processor/mainbusinessprocessor.h"
 #include "store/mainwindowstore.h"
 #include "commonsetting.h"
 #include "model/productinformationitem.h"
@@ -38,9 +36,7 @@ private:
     AppManager();
     static AppManager self;
     //middleware
-    QSharedPointer<VendingMachineMiddleware> mVendingMachineMiddleware {nullptr};
     //processor
-    std::unique_ptr<ProcessorAbstract> mMainBusinessProcessor {nullptr};
 };
 
 #endif // APPMANAGER_H

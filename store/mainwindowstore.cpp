@@ -32,11 +32,29 @@ MainWindowStore::MainWindowStore() {
             &MainWindowStore::supAndDietProductInfoModelChanged);
     //
     mProductInfoDetailItem = QSharedPointer<ProductInformationItem>(new ProductInformationItem());
+    mSelectedProductModel = QSharedPointer<ProductInformationModel>(new ProductInformationModel());
+    connect(mSelectedProductModel.get(),
+            &QObjectListModel::countChanged,
+            this,
+            &MainWindowStore::selectedProductModelChanged);
     //
     loadProteinProductInfo();
     loadBcaaProductInfo();
     loadPreWorkoutProductInfo();
     loadSupAndDietProductInfo();
+}
+
+ProductInformationModel *MainWindowStore::selectedProductModel() const
+{
+    return mSelectedProductModel.get();
+}
+
+void MainWindowStore::setSelectedProductModel(QSharedPointer<ProductInformationModel> newSelectedProductModel)
+{
+    if (mSelectedProductModel == newSelectedProductModel)
+        return;
+    mSelectedProductModel = newSelectedProductModel;
+    emit selectedProductModelChanged();
 }
 
 ProductInformationModel *MainWindowStore::supAndDietProductInfoModel() const
@@ -101,6 +119,16 @@ MainWindowStore *MainWindowStore::getInstance()
     return instance;
 }
 
+double MainWindowStore::getTotalPayment()
+{
+    double ret = 0;
+    for(int i = 0; i < mSelectedProductModel->size(); i++)
+    {
+        ret += mSelectedProductModel->at(i)->cost();
+    }
+    return ret;
+}
+
 void MainWindowStore::process(const QSharedPointer<Action> &action)
 {
 
@@ -110,6 +138,33 @@ void MainWindowStore::process(const QSharedPointer<Action> &action)
         processActionSelectProduct(action);
         break;
     }
+
+    case ActionType::AddIngredient:
+    {
+        processActionAddIngredient(action);
+        break;
+    }
+
+    case ActionType::SubIngredient:
+    {
+        processActionSubIngredient(action);
+        break;
+    }
+
+    case ActionType::ConfirmSelectProduct:
+    {
+        mSelectedProductModel->append(mProductInfoDetailItem);
+        emit selectedProductModelChanged();
+        break;
+    }
+
+    case ActionType::CancelAllSelectedProduct:
+    {
+        mSelectedProductModel->clear();
+        emit selectedProductModelChanged();
+        break;
+    }
+
     default:
         break;
     }
@@ -144,14 +199,25 @@ void MainWindowStore::loadProteinProductInfo()
         for (int j = 0; j < 4; j++)
         {
             QSharedPointer<IngredientItem> additionalItem = QSharedPointer<IngredientItem>(new IngredientItem);
-            additionalItem->setName("Creatine");
+            additionalItem->setName("Protein" + QString::number(j + 1));
             additionalItem->setQuantity(5);
             additionalItem->setCost(1000);
             additionalItem->setAmount(0);
             listAdditionalItem.append(additionalItem);
         }
         item->additionalProtein()->setObjectList(listAdditionalItem);
-        item->additionalNutrients()->setObjectList(listAdditionalItem);
+        //
+        QList<QSharedPointer<IngredientItem>> listAdditionalNutrients;
+        for (int j = 0; j < 5; j++)
+        {
+            QSharedPointer<IngredientItem> additionalItem = QSharedPointer<IngredientItem>(new IngredientItem);
+            additionalItem->setName("Nutrient" + QString::number(j + 1));
+            additionalItem->setQuantity(5);
+            additionalItem->setCost(1000);
+            additionalItem->setAmount(0);
+            listAdditionalNutrients.append(additionalItem);
+        }
+        item->additionalNutrients()->setObjectList(listAdditionalNutrients);
         listObjects.append(item);
     }
     mProteinProductInfoModel->setObjectList(listObjects);
@@ -173,14 +239,25 @@ void MainWindowStore::loadBcaaProductInfo()
         for (int j = 0; j < 4; j++)
         {
             QSharedPointer<IngredientItem> additionalItem = QSharedPointer<IngredientItem>(new IngredientItem);
-            additionalItem->setName("Creatine");
+            additionalItem->setName("Protein" + QString::number(j + 1));
             additionalItem->setQuantity(5);
             additionalItem->setCost(1000);
             additionalItem->setAmount(0);
             listAdditionalItem.append(additionalItem);
         }
         item->additionalProtein()->setObjectList(listAdditionalItem);
-        item->additionalNutrients()->setObjectList(listAdditionalItem);
+        //
+        QList<QSharedPointer<IngredientItem>> listAdditionalNutrients;
+        for (int j = 0; j < 5; j++)
+        {
+            QSharedPointer<IngredientItem> additionalItem = QSharedPointer<IngredientItem>(new IngredientItem);
+            additionalItem->setName("Nutrient" + QString::number(j + 1));
+            additionalItem->setQuantity(5);
+            additionalItem->setCost(1000);
+            additionalItem->setAmount(0);
+            listAdditionalNutrients.append(additionalItem);
+        }
+        item->additionalNutrients()->setObjectList(listAdditionalNutrients);
         listObjects.append(item);        
     }
     mBcaaProductInfoModel->setObjectList(listObjects);
@@ -202,14 +279,25 @@ void MainWindowStore::loadPreWorkoutProductInfo()
         for (int j = 0; j < 4; j++)
         {
             QSharedPointer<IngredientItem> additionalItem = QSharedPointer<IngredientItem>(new IngredientItem);
-            additionalItem->setName("Creatine");
+            additionalItem->setName("Protein" + QString::number(j + 1));
             additionalItem->setQuantity(5);
             additionalItem->setCost(1000);
             additionalItem->setAmount(0);
             listAdditionalItem.append(additionalItem);
         }
         item->additionalProtein()->setObjectList(listAdditionalItem);
-        item->additionalNutrients()->setObjectList(listAdditionalItem);
+        //
+        QList<QSharedPointer<IngredientItem>> listAdditionalNutrients;
+        for (int j = 0; j < 5; j++)
+        {
+            QSharedPointer<IngredientItem> additionalItem = QSharedPointer<IngredientItem>(new IngredientItem);
+            additionalItem->setName("Nutrient" + QString::number(j + 1));
+            additionalItem->setQuantity(5);
+            additionalItem->setCost(1000);
+            additionalItem->setAmount(0);
+            listAdditionalNutrients.append(additionalItem);
+        }
+        item->additionalNutrients()->setObjectList(listAdditionalNutrients);
         listObjects.append(item);
     }
     mPreWorkoutProductInfoModel->setObjectList(listObjects);
@@ -275,6 +363,124 @@ void MainWindowStore::processActionSelectProduct(QSharedPointer<Action> action)
     case PRODUCT_TYPE::SUPANDDIET:
     {
         processActionSelectSupAndDietProduct(itemId);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void MainWindowStore::processActionAddIngredient(QSharedPointer<Action> action)
+{
+    if(!action)
+    {
+        return;
+    }
+
+    auto data = action->getPayload<QVariant>().toMap();
+    int type = data["type"].toInt();
+    QString itemName = data["name"].toString();
+    switch (type) {
+    case INGREDIENT_TYPE::ADD_PROTEIN:
+    {
+        auto listAdditionalProtein = mProductInfoDetailItem->additionalProtein();
+        for (int i = 0; i < listAdditionalProtein->size(); i++)
+        {
+            if (itemName == listAdditionalProtein->at(i)->name())
+            {
+                mProductInfoDetailItem->additionalProtein()->at(i)->
+                    setAmount(listAdditionalProtein->at(i)->amount() + 1);
+                mProductInfoDetailItem->setCost(mProductInfoDetailItem->cost() +
+                                                listAdditionalProtein->at(i)->cost());
+                emit productInfoDetailItemChanged();
+                break;
+            }
+        }
+        break;
+    }
+
+    case INGREDIENT_TYPE::ADD_NUTRIENT:
+    {
+        auto listAdditionalNutrient = mProductInfoDetailItem->additionalNutrients();
+        for (int i = 0; i < listAdditionalNutrient->size(); i++)
+        {
+            if (itemName == listAdditionalNutrient->at(i)->name())
+            {
+                mProductInfoDetailItem->additionalNutrients()->at(i)->
+                    setAmount(listAdditionalNutrient->at(i)->amount() + 1);
+                mProductInfoDetailItem->setCost(mProductInfoDetailItem->cost() +
+                                                listAdditionalNutrient->at(i)->cost());
+                emit productInfoDetailItemChanged();
+                break;
+            }
+        }
+        break;
+    }
+
+    case INGREDIENT_TYPE::ADD_ICE:
+    {
+        mProductInfoDetailItem->setIsAddIce(true);
+        mProductInfoDetailItem->setCost(mProductInfoDetailItem->cost() + mProductInfoDetailItem->iceCost());
+        emit productInfoDetailItemChanged();
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void MainWindowStore::processActionSubIngredient(QSharedPointer<Action> action)
+{
+    if(!action)
+    {
+        return;
+    }
+
+    auto data = action->getPayload<QVariant>().toMap();
+    int type = data["type"].toInt();
+    QString itemName = data["name"].toString();
+    switch (type) {
+    case INGREDIENT_TYPE::ADD_PROTEIN:
+    {
+        auto listAdditionalProtein = mProductInfoDetailItem->additionalProtein();
+        for (int i = 0; i < listAdditionalProtein->size(); i++)
+        {
+            if (itemName == listAdditionalProtein->at(i)->name())
+            {
+                mProductInfoDetailItem->additionalProtein()->at(i)->
+                    setAmount(listAdditionalProtein->at(i)->amount() - 1);
+                mProductInfoDetailItem->setCost(mProductInfoDetailItem->cost() -
+                                                listAdditionalProtein->at(i)->cost());
+                emit productInfoDetailItemChanged();
+                break;
+            }
+        }
+        break;
+    }
+
+    case INGREDIENT_TYPE::ADD_NUTRIENT:
+    {
+        auto listAdditionalNutrient = mProductInfoDetailItem->additionalNutrients();
+        for (int i = 0; i < listAdditionalNutrient->size(); i++)
+        {
+            if (itemName == listAdditionalNutrient->at(i)->name())
+            {
+                mProductInfoDetailItem->additionalNutrients()->at(i)->
+                    setAmount(listAdditionalNutrient->at(i)->amount() - 1);
+                mProductInfoDetailItem->setCost(mProductInfoDetailItem->cost() -
+                                                listAdditionalNutrient->at(i)->cost());
+                emit productInfoDetailItemChanged();
+                break;
+            }
+        }
+        break;
+    }
+
+    case INGREDIENT_TYPE::ADD_ICE:
+    {
+        mProductInfoDetailItem->setIsAddIce(false);
+        mProductInfoDetailItem->setCost(mProductInfoDetailItem->cost() - mProductInfoDetailItem->iceCost());
+        emit productInfoDetailItemChanged();
         break;
     }
     default:

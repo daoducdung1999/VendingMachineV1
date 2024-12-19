@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import QtMultimedia
 import "./Common/"
 import "./Common/Components/"
 import Flux 1.0
@@ -14,11 +15,30 @@ Window {
     title: qsTr("Vending Machine")
     color: CommonStyles.backGroundColor
 
-    //video area
+    // //video area
     Rectangle {
         anchors.fill: parent
         anchors.bottomMargin: parent.height * 2/3
         color: CommonStyles.transparentColor
+
+        Video {
+            id: videoPlayer
+            anchors.fill: parent
+            source: "qrc:/Video/70796-538877060_tiny.avi"
+            fillMode: VideoOutput.Stretch
+            loops: MediaPlayer.Once
+            muted: true
+            volume: 0
+        }
+    }
+
+    Connections {
+        target: videoPlayer
+        function onPlaybackStateChanged() {
+            if (videoPlayer.playbackState === MediaPlayer.StoppedState) {
+                videoPlayer.play()
+            }
+        }
     }
 
     Component.onCompleted: {
@@ -31,6 +51,8 @@ Window {
         btn7.setToMainColor()
         //
         gridView.model = MainWindowStore.proteinProductInfoModel
+        //
+        videoPlayer.play()
     }
 
     Rectangle {
@@ -231,9 +253,269 @@ Window {
         Rectangle {
             anchors.fill: parent
             anchors.topMargin: parent.height * 0.83
-            color: CommonStyles.secondaryColor
-        }
+            color: CommonStyles.transparentColor
 
+            Rectangle {
+                anchors.fill: parent
+                anchors.rightMargin:  parent.width * 0.4
+                color: CommonStyles.transparentColor
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: parent.width * 0.1
+                    anchors.rightMargin: parent.width * 0.15
+                    anchors.topMargin: parent.height * 0.1
+                    anchors.bottomMargin: parent.height * 0.1
+                    spacing: 0
+
+                    Item {
+                        Layout.preferredHeight: 1
+                        Layout.preferredWidth: 1
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: parent.width * 0.03
+                            color: CommonStyles.gray15
+                            radius: parent.width * 0.01
+                            visible: listItemSelect.count < 1
+                            Label {
+                                anchors.fill: parent
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                wrapMode: Text.WordWrap
+                                text: "Ordered\nItem"
+                                font.pixelSize: parent.height * 0.2
+                                font.family: CommonStyles.notoSanFontRegular
+                                font.bold: true
+                                color: CommonStyles.textColor
+                            }
+                        }
+                    }
+
+                    Item {
+                        Layout.preferredHeight: 1
+                        Layout.preferredWidth: 1
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: parent.width * 0.03
+                            color: CommonStyles.gray15
+                            radius: parent.width * 0.01
+                            visible: listItemSelect.count < 2
+
+                            Label {
+                                anchors.fill: parent
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                wrapMode: Text.WordWrap
+                                text: "Ordered\nItem"
+                                font.pixelSize: parent.height * 0.2
+                                font.family: CommonStyles.notoSanFontRegular
+                                font.bold: true
+                                color: CommonStyles.textColor
+                            }
+                        }
+                    }
+
+                    Item {
+                        Layout.preferredHeight: 1
+                        Layout.preferredWidth: 1
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: parent.width * 0.03
+                            color: CommonStyles.gray15
+                            radius: parent.width * 0.01
+                            visible: listItemSelect.count < 3
+
+                            Label {
+                                anchors.fill: parent
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                wrapMode: Text.WordWrap
+                                text: "Ordered\nItem"
+                                font.pixelSize: parent.height * 0.2
+                                font.family: CommonStyles.notoSanFontRegular
+                                font.bold: true
+                                color: CommonStyles.textColor
+                            }
+                        }
+                    }
+                }
+            }
+
+            //item select
+            Rectangle {
+                anchors.fill: parent
+                anchors.rightMargin:  parent.width * 0.4
+                color: CommonStyles.transparentColor
+
+                Image {
+                    id: leftArrow
+                    anchors.fill: parent
+                    anchors.leftMargin: parent.width * 0.03
+                    anchors.rightMargin: parent.width * 0.9
+                    anchors.topMargin: parent.height * 0.4
+                    anchors.bottomMargin: parent.height * 0.4
+                    fillMode: Image.Stretch
+                    source: "qrc:/Image/Components/leftarrow.svg"
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (listItemSelect.currentIndex < listItemSelect.count - 1) {
+                                listItemSelect.currentIndex += 1
+                            }
+                        }
+                    }
+                }
+
+                Image {
+                    id: rightArrow
+                    anchors.fill: parent
+                    anchors.leftMargin: parent.width * 0.85
+                    anchors.rightMargin: parent.width * 0.08
+                    anchors.topMargin: parent.height * 0.4
+                    anchors.bottomMargin: parent.height * 0.4
+                    fillMode: Image.Stretch
+                    source: "qrc:/Image/Components/rightarrow.svg"
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (listItemSelect.currentIndex > 0) {
+                                listItemSelect.currentIndex -= 1
+                            }
+                        }
+                    }
+                }
+
+                ListView {
+                    id: listItemSelect
+                    anchors.fill: parent
+                    anchors.leftMargin: parent.width * 0.1
+                    anchors.rightMargin: parent.width * 0.15
+                    anchors.topMargin: parent.height * 0.1
+                    anchors.bottomMargin: parent.height * 0.1
+                    clip: true
+
+                    model: MainWindowStore.selectedProductModel
+                    orientation: ListView.Horizontal
+
+                    delegate: Rectangle {
+                        width: listItemSelect.width / 3
+                        height: listItemSelect.height
+                        color: CommonStyles.transparentColor
+                        SelectedProductItem  {
+                            anchors.fill: parent
+                            anchors.margins: parent.width * 0.03
+                            imgSource: getProteinImg(model.object.type, model.object.id)
+                            visibleThis: false
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.leftMargin:  parent.width * 0.6
+                color: CommonStyles.transparentColor
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.rightMargin: parent.width * 0.5
+                    color: CommonStyles.transparentColor
+
+                    Rectangle
+                    {
+                        anchors.fill: parent
+                        anchors.bottomMargin: parent.height * 0.5
+                        color: CommonStyles.gray25
+
+                        Label {
+                            anchors.fill: parent
+                            anchors.bottomMargin: parent.height * 0.5
+                            anchors.rightMargin: parent.width * 0.05
+                            horizontalAlignment: Text.AlignRight
+                            verticalAlignment: Text.AlignVCenter
+                            wrapMode: Text.WordWrap
+                            text: "Payment Amount"
+                            font.pixelSize: parent.height * 0.2
+                            font.family: CommonStyles.notoSanFontRegular
+                            font.bold: true
+                            color: CommonStyles.textColor
+                        }
+
+                        Label {
+                            anchors.fill: parent
+                            anchors.topMargin: parent.height * 0.5
+                            anchors.rightMargin: parent.width * 0.05
+                            horizontalAlignment: Text.AlignRight
+                            verticalAlignment: Text.AlignVCenter
+                            wrapMode: Text.WordWrap
+                            text: "₩ " + MainWindowStore.totalPayment
+                            font.pixelSize: Math.min(parent.width, parent.height) * 0.35
+                            font.family: CommonStyles.notoSanFontRegular
+                            font.bold: true
+                            color: CommonStyles.primaryColor
+                        }
+                    }
+
+                    CustomButton
+                    {
+                        anchors.fill: parent
+                        anchors.topMargin: parent.height * 0.5
+                        buttonName: "Cancel All"
+                        buttonRadius: 0
+                        btnColor: CommonStyles.secondaryColor
+                        textColor: CommonStyles.whiteColor
+                        textSize: parent.height * 0.15
+                        btnBorderColor: CommonStyles.secondaryColor
+                        onClicked: {
+                            ActionProvider.cancelAllSelectedProduct()
+                        }
+                    }
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.leftMargin: parent.width * 0.5
+                    color: CommonStyles.primaryColor
+
+                    Image {
+                        id: name
+                        anchors.fill: parent
+                        anchors.topMargin: parent.height * 0.05
+                        anchors.bottomMargin: parent.height * 0.5
+                        anchors.rightMargin: parent.width * 0.15
+                        anchors.leftMargin: parent.width * 0.15
+                        source: "qrc:/Image/Components/credit-card (1).png"
+                        fillMode: Image.Stretch
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+
+                            }
+                        }
+                    }
+
+                    CustomButton {
+                        anchors.fill: parent
+                        anchors.topMargin: parent.height * 0.5
+                        buttonName: "Payment"
+                        buttonRadius: 0
+                        textColor: CommonStyles.whiteColor
+                        textSize: parent.height * 0.15
+                        onClicked: {
+                        }
+                    }
+                }
+            }
+        }
     }
 
     ModalWindowDetail {

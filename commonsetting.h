@@ -3,8 +3,6 @@
 
 #include <QString>
 
-const QString MAIN_BUSINESS_PROCESSOR = "MainProcessor";
-
 //type
 enum PRODUCT_TYPE
 {
@@ -12,6 +10,13 @@ enum PRODUCT_TYPE
     BCAA,
     PREWORKOUT,
     SUPANDDIET,
+};
+
+enum INGREDIENT_TYPE
+{
+    ADD_PROTEIN = 1,
+    ADD_NUTRIENT,
+    ADD_ICE,
 };
 
 #endif // COMMONSETTING_H

@@ -1,0 +1,37 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Common/CommonStyles.qml</file>
+        <file>Common/qmldir</file>
+        <file>Common/Font/NotoSansKR-Regular.ttf</file>
+        <file>Image/BCAA/bcaa_1.png</file>
+        <file>Image/BCAA/bcaa_2.png</file>
+        <file>Image/BCAA/bcaa_3.png</file>
+        <file>Image/BCAA/bcaa_4.png</file>
+        <file>Image/Preworkout/pw_01.png</file>
+        <file>Image/Preworkout/pw_02.png</file>
+        <file>Image/Preworkout/pw_03.png</file>
+        <file>Image/Preworkout/pw_04.png</file>
+        <file>Image/Protein/protein_01.png</file>
+        <file>Image/Protein/protein_02.png</file>
+        <file>Image/Protein/protein_03.png</file>
+        <file>Image/Protein/protein_04.png</file>
+        <file>Image/Protein/protein_05.png</file>
+        <file>Image/Protein/protein_06.png</file>
+        <file>Common/Components/TabViewButton.qml</file>
+        <file>Common/Components/ProductInforItem.qml</file>
+        <file>Image/Preworkout/pw_05.png</file>
+        <file>ModalWindowDetail.qml</file>
+        <file>Common/Components/IngredientItem.qml</file>
+        <file>Common/Components/CustomButton.qml</file>
+        <file>Image/SupAndDiet/sup_diet_01.png</file>
+        <file>Image/SupAndDiet/sup_diet_02.png</file>
+        <file>Image/SupAndDiet/sup_diet_03.png</file>
+        <file>Image/SupAndDiet/sup_diet_04.png</file>
+        <file>Image/SupAndDiet/sup_diet_05.png</file>
+        <file>Image/SupAndDiet/sup_diet_06.png</file>
+        <file>Image/SupAndDiet/sup_diet_07.png</file>
+        <file>Image/Components/Steve-Zondicons-Minus-Solid.svg</file>
+        <file>Image/Components/Steve-Zondicons-Add-Solid.svg</file>
+    </qresource>
+</RCC>
